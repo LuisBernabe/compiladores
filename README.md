@@ -3,6 +3,6 @@ Nombre del equipo:
 
   Integrantes:
 
-  Bernabe Gómez Luis Gerardo
+  Bernabe Gómez Luis Gerardo.
   Cova pacheco Felipe De Jesus
   Gámez García Francisco Daniel 
