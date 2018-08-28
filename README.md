@@ -6,5 +6,5 @@ Nombre del equipo:
 
   	Bernabe Gómez Luis Gerardo.
   	Cova pacheco Felipe De Jesus
-  	Gámez García Francisco Daniel 
+  	Gámez García Francisco Daniel.
 
