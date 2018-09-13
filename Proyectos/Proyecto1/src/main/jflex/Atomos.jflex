@@ -4,11 +4,46 @@ import java.util.Stack;
 %public
 %class AnalizadorPython
 %standalone
-
+%state INDENTA CODIGO DEINDENTA CADENA
 %unicode
-
 %{
+    static Stack<Integer> pila = new Stack<Integer>();
+    static Integer actual = 0;
+    static String cadena = "";
+    static int dedents = 0;
+    static int indents = 0;
 
+
+
+
+    /** Función que maneja los niveles de indetación   */
+    public void indentacion(int espacios){
+        if(pila.empty()){ //ponerle un cero a la pila si esta vacia
+             pila.push(new Integer(0));
+        }
+
+        Integer tope = pila.peek();
+
+        if(tope != espacios){
+            if(tope > espacios){
+                while(pila.peek() > espacios &&  pila.peek()!=0 ){
+                    pila.pop();
+                    dedents += 1;
+                }
+                if(pila.peek() == espacios){
+        yybegin(DEINDENTA);
+                }else{
+        System.out.print("Error de indentación. Línea "+(yyline+1));
+        System.exit(1);
+    }
+        //El nivel actual de indentación es mayor a los anteriores.
+            pila.push(espacios);
+      yybegin(CODIGO);
+            indents = 1;
+        }else 
+            yybegin(CODIGO);
+    }
+}
 %}
 
 ENTERO          = 0+ | [0-9]+
@@ -49,6 +84,32 @@ IDENTIFICADOR       = ([:letter:] | "_" )([:letter:] | "_" | [0-9])*
 %%
 
 
+
+{COMENTARIO}            {}
+<CADENA>{
+  {CHAR_LITERAL}*\"     {yybegin(CODIGO);
+                                         System.out.print("");}
+  {SALTO}       { System.out.print("Cadena mal construida, linea " + (yyline+1) ); System.exit(1);}
+}
+
+
+<YYINITIAL>{
+  (" " | "\t" )+[^" ""\t""#""\n"]         { System.out.print("Error de indentación. Línea "+(yyline+1));
+              System.exit(1);}
+  {SALTO}                                 {}
+  [^" ""\t"]                              { yypushback(1); yybegin(CODIGO);}
+}
+<DEINDENTA>{
+  .                                       { yypushback(1);
+                if(dedents > 0){
+            dedents--;
+            System.out.print("");
+                }
+              yybegin(CODIGO);}
+}
+<CODIGO>{
+
+
 " "                   {}
   {SALTO}       {yybegin(INDENTA); actual=0; System.out.println("");}
 {REAL}                {System.out.print("REAL ("+yytext()+")");}
@@ -81,3 +142,24 @@ IDENTIFICADOR       = ([:letter:] | "_" )([:letter:] | "_" | [0-9])*
 {PDER}                {System.out.print("PARENTESISDERECHO ("+yytext()+")");}
 {SALTO}               {yybegin(INDENTA); System.out.print("SALTORESERVADA ("+yytext()+")");}
 {IDENTIFICADOR}       {System.out.print("IDENTIFICADOR ("+yytext()+")");}
+}
+<INDENTA>{
+  {SALTO}                                 { actual = 0;}
+  " "                 { actual++;}
+  \t            { actual += 4;}
+  .           { yypushback(1);
+              this.indentacion(actual);
+              if(indents == 1){
+                indents = 0;
+                System.out.print("SALTOIDENTA("+indents+")");
+              }
+            }
+}
+<<EOF>>                                   { this.indentacion(0);
+              if(dedents > 0){
+                dedents--;
+                System.out.print("SALTODEIDENTA ("+dedents+")");
+              }else{
+                    }
+            }
+[^]                               {}
