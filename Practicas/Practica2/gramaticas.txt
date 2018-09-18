@@ -1,0 +1,103 @@
+izquierda
+
+F: T {$$=$1; System.out.println("[OK] "+$$);}
+;
+
+T: K T {char op=$1.charAt($1.length()-1);
+        int r=0;
+        int a=Integer.parseInt($1.substring(0,$1.length()-1));
+        int b=Integer.parseInt($2);
+        switch (op) {
+            case '+': r= a+b;
+                      break;
+            case '-': r= a-b;
+                      break;
+            case '*': r= a*b;
+                      break;
+            case '/': r= a/b;
+                      break;
+        }
+        $$=String.valueOf(r);
+ }
+ | ENTERO {$$=$1;}
+;
+
+K: T SIMBOLO {$$=$1 + $2;}
+;
+
+derecha
+F: T {$$=$1; System.out.println("[OK] "+$$);}
+;
+
+T: T K {char op=$2.charAt(0);
+        int r=0;
+        int a=Integer.parseInt($2.substring(1,$2.length()));
+        int b=Integer.parseInt($1);
+        switch (op) {
+            case '+': r= a+b;
+                      break;
+            case '-': r= a-b;
+                      break;
+            case '*': r= a*b;
+                      break;
+            case '/': r= a/b;
+                      break;
+        }
+        $$=String.valueOf(r);
+ }
+ | ENTERO {$$=$1;}
+;
+
+K: SIMBOLO T {$$=$1 + $2;}
+;
+
+
+
+F: T {$$=$1; System.out.println("[OK] "+$$);}
+;
+
+T: KMAS T {
+        int r=0;
+        int a=Integer.parseInt($2.substring(1,$2.length()));
+        int b=Integer.parseInt($1);
+        r=a+b;
+        $$=String.valueOf(r);
+ }
+ | KMENOS T {
+        int r=0;
+        int a=Integer.parseInt($2.substring(1,$2.length()));
+        int b=Integer.parseInt($1);
+        r=a-b;
+        $$=String.valueOf(r);
+ }
+ | KMUL T {
+        int r=0;
+        int a=Integer.parseInt($2.substring(1,$2.length()));
+        int b=Integer.parseInt($1);
+        r=a*b;
+        $$=String.valueOf(r);
+ }
+ | KDIV T {
+        int r=0;
+        int a=Integer.parseInt($2.substring(1,$2.length()));
+        int b=Integer.parseInt($1);
+        r=a/b;
+        $$=String.valueOf(r);
+ }
+ | ENTERO {$$=$1;}
+ | MENOS ENTERO {$$=$1 + $2; }
+
+;
+
+KMAS: T MAS {$$=$1 + $2;}
+;
+
+KMENOS: T MENOS {$$=$1 + $2;}
+;
+
+KMUL: T MUL {$$=$1 + $2;}
+;
+
+KDIV: T DIV {$$=$1 + $2;}
+;
+
