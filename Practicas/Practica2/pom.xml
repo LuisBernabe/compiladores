@@ -7,7 +7,7 @@
   <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>Practica03</name>
+  <name>Practica02</name>
   <url>http://maven.apache.org</url>
 
   <dependencies>
@@ -39,7 +39,12 @@
             <phase>initialize</phase>
             <goals>
               <goal>exec</goal>
-            </goals>            
+            </goals>
+            <configuration>
+             <workingDirectory>target/generated-sources/jflex/asintactico</workingDirectory>
+             <executable>byaccj</executable>
+             <commandlineArgs>-Jpackage=asintactico ../../../../src/main/byaccj/ari.y</commandlineArgs>
+            </configuration>
           </execution>
           <execution>
             <id>analizador-sintactico-d</id>
@@ -47,6 +52,11 @@
             <goals>
               <goal>exec</goal>
             </goals>
+            <configuration>
+             <workingDirectory>target/generated-sources/jflex/asintactico</workingDirectory>
+             <executable>byaccj</executable>
+             <commandlineArgs>-Jclass=ParserD -Jpackage=asintactico ../../../../src/main/byaccj/ari1.y</commandlineArgs>
+            </configuration>
           </execution>        
         </executions>
       </plugin>
