@@ -1,0 +1,20 @@
+Encuentra una manera de imprimir la pila de reconocimiento cada
+    que se hace una reducción. Pista, revisa el código generado por
+    byaccj
+    
+      \mbox{¿}Qué resultado da la evaluación de la expresión 3-2+8? 
+
+en la gramatica generada por la izquierda da
+-7
+
+es por que al guardar el resultado en $$ este automaticamente entra a otra gramatica
+gramatica que crece por la derecha
+
+[reduccion a ] T de : 3
+[reduccion a ] T de : 2
+[reduccion a ] T de : 8
+[reduccion a ] KMAS de : + 8
+[reduccion a ] T de : 2 +8 <--resultado
+[reduccion a ] KMENOS de : - 10 <-- resultado entra a gramatica kmenos
+[reduccion a ] T de : 3 -10
+[OK] 7
